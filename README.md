@@ -23,7 +23,11 @@ This is a developer preview, so the installation is manual for now.
 
 <!-- To format: cmd-shift-r -->
 
-## Test Syntax
+## Develop
+
+Thanks for your interest in contributing!
+
+### Test Syntax
 
 Docs at https://www.sublimetext.com/docs/3/syntax.html and https://www.sublimetext.com/docs/3/scope_naming.html
 
