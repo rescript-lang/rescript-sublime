@@ -34,5 +34,5 @@ Docs at https://www.sublimetext.com/docs/3/syntax.html and https://www.sublimete
 Tldr (documented in first link):
 
 - Change `ReScript.sublime-syntax`
-- Open `syntax_test.ml`
+- Open `syntax_test.res`
 - Cmd-shift-p -> Build With: Syntax Tests
