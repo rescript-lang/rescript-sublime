@@ -128,12 +128,12 @@ contexts:
       scope: punctuation.section.brackets.end
 
   list:
-    - match: '\b(list)(\[)'
+    - match: '\b(list)(\{)'
       captures:
         1: keyword
-        2: punctuation.section.brackets.begin
-    - match: '\]'
-      scope: punctuation.section.brackets.end
+        2: punctuation.section.braces.begin
+    - match: '\}'
+      scope: punctuation.section.braces.end
 
   objectAccess:
     - match: '\b{{RE_IDENT}}(\[)'

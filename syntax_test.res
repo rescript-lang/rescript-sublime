@@ -3,11 +3,11 @@
 // hi
 // ^ source.res comment.line
 
-   //
-// ^^ source.res comment.line
+//
+// <- source.res comment.line
 
-    /* hello
-//  ^ source.res comment.block
+/* hello
+// <- source.res comment.block
   world */
 //       ^ source.res comment.block
 
@@ -60,9 +60,9 @@ let a = .2
 //      ^source.res punctuation.accessor
 //       ^source.res constant.numeric
 
-   let bar = true
-// ^ source.res keyword
-//           ^source.res constant.language
+let bar = true
+// <- source.res keyword
+//        ^source.res constant.language
 let recordAccess = fooRecord.myName
 //                          ^source.res punctuation.accessor
 let recordAccessWithScope = fooRecord.ReasonReact.myName
@@ -71,18 +71,18 @@ let recordAccessWithScope = fooRecord.ReasonReact.myName
 let [1, 2.2] = foo()
 //   ^ source.res constant.numeric
 //      ^^^ source.res constant.numeric
-let [c, [a, [1], list[a, ...rest],  c], 2.2] = [c, 1, "d", 'a', 1+2]
+let [c, [a, [1], list{a, ...rest},  c], 2.2] = [c, 1, "d", 'a', 1+2]
 //               ^ source.res keyword
 //                       ^ source.res keyword.operator
 
-   type bla('a) = {
-// ^ source.res storage.type
-//                ^ source.res punctuation.section.braces.begin
+type bla<'a> = {
+// <- source.res storage.type
+//             ^ source.res punctuation.section.braces.begin
   a: int,
      // ^ source.res punctuation.separator
   ok: 'a,
-   }
-// ^ source.res punctuation.section.braces.end
+}
+// <- source.res punctuation.section.braces.end
 
 let getItem = (theList) =>
   if callSomeFunctionThatThrows() {
@@ -107,7 +107,7 @@ let getCenterCoordinates = (aBla, doHello, ~b=1, ~c, ()) => {
 }
 
 type profession = Teacher | Director
-               // ^ source.res
+//                ^ source.res
 /* test */
 
 let person1 = Teacher
@@ -118,8 +118,8 @@ let getProfession = (person) =>
   | Director => "A director"
   }
 
-   open Soup
-// ^ source.res keyword
+open Soup
+// <- source.res keyword
 //      ^ source.res entity.name.namespace
 include {let a = 1}
 //       ^ source.res keyword
@@ -129,8 +129,8 @@ open Belt.Map
 include Belt.Map.Make()
 //               ^ source.res entity.name.namespace
 
-   Foo.Some(Bar)
-// ^ source.res entity.name.namespace
+Foo.Some(Bar)
+// <- source.res entity.name.namespace
 //     ^ source.res
 //          ^ source.res
 Foo.Some(Bar())
@@ -305,14 +305,14 @@ type a = option<bar>
 %%foo(bar) let a = 1
 %%foo (bar) let a = 1
 
-@bs.module external foo: {..} => {...} = "bla"
+@bs.module external foo: {..} => {..} = "bla"
 //                        ^^ source.res keyword.operator
-//                                ^^^ source.res keyword.operator
+//                                ^^ source.res keyword.operator
 
 let asd = ["bar"]
-let asd = list["bar"]
+let asd = list{"bar"}
 //        ^ source.res keyword
 let asd = foo["bar"]
 //        ^ source.res
-   foo["bar"] = baz
-// ^ source.res
+foo["bar"] = baz
+// <- source.res
