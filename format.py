@@ -3,10 +3,13 @@ import sublime_plugin
 import subprocess
 import re
 import os
+import tempfile
+import pathlib
 
 SETTINGS_PATH = 'Default.sublime-settings'
 
-poorMansErrorParser = re.compile(r'Syntax error!\n.+ \((\d+),(\d+)\):(.+)')
+resExt = ".res"
+resiExt = ".resi"
 
 def findBsConfigDirFromFilename(filename):
   currentDir = os.path.dirname(filename)
@@ -19,6 +22,89 @@ def findBsConfigDirFromFilename(filename):
       return None
 
     currentDir = parentDir
+
+def formatUsingValidBscPath(code, bscPath, isInterface):
+    extension = resiExt if isInterface else resExt
+    tmpobj = tempfile.NamedTemporaryFile(mode='w+', suffix=extension, delete=False)
+    tmpobj.write(code)
+    tmpobj.close()
+    proc = subprocess.Popen(
+      [bscPath, "-color", "never", "-format", tmpobj.name],
+      stderr=subprocess.PIPE,
+      stdout=subprocess.PIPE,
+    )
+    stdout, stderr = proc.communicate()
+    if proc.returncode == 0:
+      return {
+        "kind": "success",
+        "result": stdout.decode(),
+      }
+    else:
+      return {
+        "kind": "error",
+        "result": stderr.decode(),
+      }
+
+# Copied over from rescript-language-server's server.ts
+def parseBsbOutputLocation(location):
+  # example bsb output location:
+  # 3:9
+  # 3:5-8
+  # 3:9-6:1
+
+  # language-server position is 0-based. Ours is 1-based. Don't forget to convert
+  # also, our end character is inclusive. Language-server's is exclusive
+  isRange = location.find("-") >= 0
+  if isRange:
+    [from_, to] = location.split("-")
+    [fromLine, fromChar] = from_.split(":")
+    isSingleLine = to.find(":") >= 0
+    [toLine, toChar] = to.split(":") if isSingleLine else [fromLine, to]
+    return {
+      "start": {"line": int(fromLine) - 1, "character": int(fromChar) - 1},
+      "end": {"line": int(toLine) - 1, "character": int(toChar)},
+    }
+  else:
+    [line, char] = location.split(":")
+    start = {"line": int(line) - 1, "character": int(char)}
+    return {
+      "start": start,
+      "end": start,
+    }
+
+# Copied over from rescript-language-server's server.ts
+def parseBsbLogOutput(content):
+  res = []
+  lines = content.splitlines()
+  for line in lines:
+    if line.startswith("  We've found a bug for you!"):
+      res.append([])
+    elif line.startswith("  Warning number "):
+      res.append([])
+    elif line.startswith("  Syntax error!"):
+      res.append([])
+    elif re.match(r'^  [0-9]+ ', line):
+      # code display. Swallow
+      pass
+    elif line.startswith("  "):
+      res[len(res) - 1].append(line)
+
+  ret = {}
+  # map of file path to list of diagnosis
+  for diagnosisLines in res:
+    fileAndLocation, *diagnosisMessage = diagnosisLines
+    lastSpace = fileAndLocation.rfind(" ")
+    file = fileAndLocation[2:lastSpace]
+    location = fileAndLocation[lastSpace:]
+    if not file in ret:
+      ret[file] = []
+    cleanedUpDiagnosis = "\n".join([line[2:] for line in diagnosisMessage]).strip()
+    ret[file].append({
+      "range": parseBsbOutputLocation(location),
+      "message": cleanedUpDiagnosis,
+    })
+
+  return ret
 
 def findFormatter(view, filename):
   # filename = view.file_name()
@@ -72,7 +158,7 @@ class FormatCommand(sublime_plugin.TextCommand):
     view.erase_phantoms("errns")
 
     currentBuffer = sublime.Region(0, view.size())
-    contents = view.substr(currentBuffer)
+    code = view.substr(currentBuffer)
 
     filename = view.file_name()
     if filename == None:
@@ -85,36 +171,30 @@ class FormatCommand(sublime_plugin.TextCommand):
     if bscExe == None:
       return
 
-    proc = subprocess.Popen(
-      [bscExe, "-color", "never", "-format", filename],
-      stderr=subprocess.PIPE,
-      stdout=subprocess.PIPE,
+    extension = pathlib.Path(filename).suffix
+    formattedResult = formatUsingValidBscPath(
+      code,
+      bscExe,
+      extension == resiExt
     )
-    stdout, stderr = proc.communicate()
 
-    # if proc.returncode == 0 and formatBuffer:
-    if proc.returncode == 0 and formatBuffer:
-      view.replace(edit, currentBuffer, stdout.decode())
+    if formattedResult["kind"] == "success":
+      view.replace(edit, currentBuffer, formattedResult["result"])
     else:
-      errTxt = stderr.decode()
       regions = []
       phantoms = []
 
-      for line in errTxt.splitlines():
-        # test.ns(29,38):Did you forget to close this template expression with a backtick?
-        match = poorMansErrorParser.match(line)
-        if match == None:
-          # can't parse error... not sure why. Possible that it's a bad binary
-          sublime.error_message("An unknown error occurred during formatting:\n\n" + errTxt)
-        else:
-          # filename = match.group(1)
-          startCnum = int(match.group(2))
-          endCnum = int(match.group(3))
-          explanation = match.group(4)
-
-          region = sublime.Region(startCnum, endCnum)
+      filesAndErrors = parseBsbLogOutput(formattedResult["result"])
+      for _file, diagnostics in filesAndErrors.items():
+        for diagnostic in diagnostics:
+          range_ = diagnostic["range"]
+          message = diagnostic["message"]
+          region = sublime.Region(
+            view.text_point(range_["start"]["line"], range_["start"]["character"]),
+            view.text_point(range_["end"]["line"], range_["end"]["character"]),
+          )
           regions.append(region)
-          html = '<body id="my-plugin-feature"> <style> div.error {padding: 5px; } </style> <div class="error">' + explanation +  '</div> </body>'
+          html = '<body id="my-plugin-feature"> <style> div.error {padding: 5px; } </style> <div class="error">' + message +  '</div> </body>'
           view.add_phantom("errns", region, html, sublime.LAYOUT_BELOW)
 
       view.add_regions('syntaxerror', regions, 'invalid.illegal', 'dot', sublime.DRAW_NO_FILL)
