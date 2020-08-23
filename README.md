@@ -9,11 +9,11 @@ Get it from https://packagecontrol.io/packages/ReScript
 ## Features
 
 - Highlighting
-- Soon: formatting
+- Formatting: Command Palette (`cmd-shift-p`) -> ReScript: Format File
 
 ## Config
 
-- Command Palette (`cmd-shift-p`) -> UI: Select Color Scheme. Use Mariana for best effects. Or try another one and tell us. Mariana colors tokens distinctively (and still pleasantly) enough for module and variant to be visually distinct despite both being capitalized. Gotta have accurate highlighting!
+- Command Palette -> UI: Select Color Scheme. Use Mariana for best effects. Or try another one and tell us. Mariana colors tokens distinctively (and still pleasantly) enough for module and variant to be visually distinct despite both being capitalized. Gotta have accurate highlighting!
 
 <!-- - Open this repo's `Default.sublime-settings`, put in the absolute path to the formatter exe in `optionalGlobalFormatter`. -->
 
@@ -31,4 +31,4 @@ Tldr (documented in first link):
 
 - Change `ReScript.sublime-syntax`
 - Open `syntax_test.res`
-- Command Palette (`cmd-shift-p`) -> Build With: Syntax Tests
+- Command Palette -> Build With: Syntax Tests
