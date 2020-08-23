@@ -120,7 +120,7 @@ class FormatCommand(sublime_plugin.TextCommand):
       view.add_regions('syntaxerror', regions, 'invalid.illegal', 'dot', sublime.DRAW_NO_FILL)
 
 
-packageName = 'Packages/rescript-sublime/ReScript.sublime-syntax'
+packageName = 'ReScript'
 
 # class NsListener(sublime_plugin.ViewEventListener):
 #   def on_pre_save(self):
