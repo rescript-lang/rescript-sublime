@@ -19,15 +19,20 @@ variables:
 contexts:
 
   commentLine:
-    - match: //.*
-      # TODO: append with file scope
-      scope: comment.line
+    - match: //
+      scope: punctuation.definition.comment
+      push:
+        - meta_scope: comment.line
+        - match: \n
+          pop: true
 
   commentBlock:
     - match: /\*
+      scope: punctuation.definition.comment.begin
       push:
         - meta_scope: comment.block
         - match: \*/
+          scope: punctuation.definition.comment.end
           pop: true
 
   punctuations:

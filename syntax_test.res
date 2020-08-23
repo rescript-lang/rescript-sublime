@@ -4,12 +4,13 @@
 // ^ source.res comment.line
 
 //
-// <- source.res comment.line
+// <- source.res comment.line punctuation.definition.comment
 
 /* hello
-// <- source.res comment.block
+// <- source.res comment.block punctuation.definition.comment.begin
   world */
-//       ^ source.res comment.block
+//^ source.res comment.block
+//       ^ source.res comment.block punctuation.definition.comment.end
 
    "aa";
 // ^ source.res string.quoted.double punctuation.definition.string.begin
