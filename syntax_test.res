@@ -122,12 +122,14 @@ let getProfession = (person) =>
   switch person {
   | [Teacher] => "A teacher"
   | Director => "A director"
+  | rest => "..."
   }
 
 open Soup
 // <- source.res keyword
-//      ^ source.res entity.name.namespace
+//   ^^^^ entity.name.namespace
 include {let a = 1}
+// <- keyword
 //       ^ source.res keyword
 open Belt.Map
 //   ^ source.res entity.name.namespace
@@ -161,7 +163,7 @@ module SetOfIntPairs = MakeSet((IntPair), Bar);
 //                                        ^ source.res entity.name.namespace
 module SetOfIntPairs = MakeSet(IntPair({type t = Bar}))
 //                             ^ source.res entity.name.namespace
-//                                               ^ source.res
+//                                               ^^^ entity.name.namespace
 module Foo = (Bar: Baz) => (Bar: Baz) => {let a = Bar};
 //            ^ source.res entity.name.namespace
 //                 ^ source.res entity.name.namespace
