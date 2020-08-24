@@ -107,6 +107,10 @@ let getCenterCoordinates = (aBla, doHello, ~b=1, ~c, ()) => {
   (x, y)
 }
 
+ a->b(c)->Some
+//^^ keyword.operator
+//      ^^ keyword.operator
+
 type profession = Teacher | Director
 //                ^ source.res
 /* test */
@@ -141,12 +145,12 @@ module Bla = Belt.Map.Make(Bar({type t let a:b = "cc"}))
 //     ^ source.res entity.name.namespace
 //           ^ source.res entity.name.namespace
 //                    ^ source.res entity.name.namespace
-//                        ^ source.res punctuation.section.braces.begin
+//                        ^ source.res punctuation.section.parens.begin
 //                         ^ source.res entity.name.namespace
-//                            ^ source.res punctuation.section.braces.begin
+//                            ^ source.res punctuation.section.parens.begin
 //                              ^ source.res storage.type
-//                                                    ^ source.res punctuation.section.braces.end
-//                                                     ^ source.res punctuation.section.braces.end
+//                                                    ^ source.res punctuation.section.parens.end
+//                                                     ^ source.res punctuation.section.parens.end
 module SetOfIntPairs: Foo = MakeSet(IntPair)
 //                    ^ source.res entity.name.namespace
 //                          ^ source.res entity.name.namespace
@@ -269,20 +273,31 @@ let jsx = <div className="foo">
 </div>
 
 
-// Invalid tests
 let \"a b" = c
-let nope = `hi`
-//         ^ source.res string.quoted.other punctuation.definition.string.begin
-//          ^^ source.res string.quoted.other
-//            ^ source.res string.quoted.other punctuation.definition.string.end
-let nope2 = j`hi`
-//          ^ source.res string.quoted.other variable.annotation
-//           ^ source.res string.quoted.other punctuation.definition.string.begin
-//            ^^ source.res string.quoted.other
-//              ^ source.res string.quoted.other punctuation.definition.string.end
+let str = `hi`
+//        ^ source.res string.quoted.other punctuation.definition.string.begin
+//         ^^ source.res string.quoted.other
+//           ^ source.res string.quoted.other punctuation.definition.string.end
+let interp = j`hello $bla bye`
+//                   ^ punctuation.section.interpolation
+//                    ^^^ source.res
+//                       ^^^^^ string.quoted.other
+let interp = j`hello $1 bye`
+//                    ^^^^^^ string.quoted.other
+let interp = j`hello ${world.bla->b(a)} bye`
+//            ^ source.res string.quoted.other punctuation.definition.string.begin
+//             ^ source.res string.quoted.other
+//                   ^^ source.res punctuation.section.interpolation.begin
+//                          ^ punctuation.accessor
+//                              ^^ keyword.operator
+//                                 ^ punctuation.section.parens.begin
+//                                    ^ punctuation.section.interpolation.end
+//                                      ^^^ string.quoted.other
+//                                         ^ string.quoted.other punctuation.definition.string.end
 let variant = #foo
 //            ^ source.res punctuation.definition.keyword
-type a = option<bar>
+let #...foo = bar
+//  ^^^^ punctuation.definition.keyword
 
    @foo(bar) let a = 1
 // ^ source.res meta.annotation punctuation.definition.annotation

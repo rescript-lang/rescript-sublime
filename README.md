@@ -2,18 +2,31 @@
 
 The official Sublime Text plugin for ReScript.
 
+## Prerequisite
+
+`bs-platform 8.2.0` installed locally in your project.
+
 ## Install
 
 Get it from https://packagecontrol.io/packages/ReScript
 
 ## Features
 
-- Highlighting
-- Formatting: Command Palette (`cmd-shift-p`) -> ReScript: Format File
+- Syntax highlighting (`.res`, `.resi`).
+- Formatting: Command Palette (`cmd-shift-p`) -> ReScript: Format File. caveats:
+  - Currently requires the file to be part of a ReScript project, i.e. with a `bsconfig.json`.
+  - Cannot be a temporary file.
+
+## Upcoming Features
+
+- Syntax errors diagnosis (only after formatting).
+- Formatting of temporary files
+- Formatting of files outside of a ReScript project root
+- Type diagnosis
 
 ## Config
 
-- Command Palette -> UI: Select Color Scheme. Use Mariana for best effects. Or try another one and tell us. Mariana colors tokens distinctively (and still pleasantly) enough for module and variant to be visually distinct despite both being capitalized. Gotta have accurate highlighting!
+- Command Palette -> UI: Select Color Scheme. Use **Mariana** for best effects (it'll be the new default Sublime Text theme!). Mariana colors tokens distinctively (and still pleasantly) enough for module and variant to be visually distinct despite both being capitalized. Gotta have accurate highlighting!
 
 <!-- - Open this repo's `Default.sublime-settings`, put in the absolute path to the formatter exe in `optionalGlobalFormatter`. -->
 

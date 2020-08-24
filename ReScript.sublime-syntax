@@ -86,7 +86,27 @@ contexts:
         2: punctuation.definition.string.begin
       push:
         # different than reason-highlightjs, for now
+        # interpolation
         - meta_scope: string.quoted.other
+        - match: \${
+          scope: punctuation.section.interpolation.begin
+          push:
+            - clear_scopes: 1
+            - match: \}
+              scope: punctuation.section.interpolation.end
+              pop: true
+            # TODO: will need expression
+            - include: operator
+            - include: punctuations
+        - match: (\$)
+          captures:
+            1: punctuation.section.interpolation
+          push:
+            - clear_scopes: 1
+            - match: '{{RE_IDENT}}'
+              pop: true
+            - match: '(?=\S)'
+              pop: true
         - match: '`'
           scope: punctuation.definition.string.end
           pop: true
@@ -122,9 +142,10 @@ contexts:
       # variant and modules confused
       # scope: entity.name.union
       scope: variable.function variable.other
-    - match: '(#)[a-zA-Z][0-9a-zA-Z_]*\b'
+    - match: '(#)(\.\.\.)?[a-zA-Z][0-9a-zA-Z_]*\b'
       captures:
         1: punctuation.definition.keyword
+        2: punctuation.definition.keyword
 
   array:
     - match: '\['
@@ -209,9 +230,9 @@ contexts:
   functorParameter:
     - match: \(
       push: functorParameter
-      scope: punctuation.section.braces.begin
+      scope: punctuation.section.parens.begin
     - match: \)
-      scope: punctuation.section.braces.end
+      scope: punctuation.section.parens.end
       pop: true
     - include: moduleAccessEndsWithModule
     - include: main
