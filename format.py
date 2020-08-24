@@ -5,11 +5,26 @@ import re
 import os
 import tempfile
 import pathlib
+import platform
 
 SETTINGS_PATH = 'Default.sublime-settings'
 
 resExt = ".res"
 resiExt = ".resi"
+platformSystem = platform.system()
+# rescript currently supports 3 platforms: darwin, linux, win32. these also
+# happen to be folder names for the location of the bsc binary. We're in
+# python, so we're gonna translate python's output of system to nodejs'
+# Why don't we just use the binary in node_modules/.bin/bsc? Because that
+# one's a nodejs wrapper, which has a startup cost. It makes it so that every
+# time we call it for e.g. formatting, the result janks a little.
+platformInNodeJS = "linux"
+if platformSystem == "Darwin":
+  platformInNodeJS = "darwin"
+elif platformSystem == "Windows":
+  platformInNodeJS = "win32"
+
+bscPartialPath = os.path.join("node_modules", "bs-platform", platformInNodeJS, "bsc.exe")
 
 def findBsConfigDirFromFilename(filename):
   currentDir = os.path.dirname(filename)
@@ -143,8 +158,7 @@ def findFormatter(view, filename):
     )
     return None
   else:
-    # TODO: find the right platform binary
-    bscExe = os.path.join(bsconfigDir, "node_modules", ".bin", "bsc")
+    bscExe = os.path.join(bsconfigDir, bscPartialPath)
     if os.path.exists(bscExe):
       return bscExe
     else:
@@ -194,7 +208,7 @@ class FormatCommand(sublime_plugin.TextCommand):
             view.text_point(range_["end"]["line"], range_["end"]["character"]),
           )
           regions.append(region)
-          html = '<body id="my-plugin-feature"> <style> div.error {padding: 5px; } </style> <div class="error">' + message +  '</div> </body>'
+          html = '<body> <style> div.error {padding: 5px; border-radius: 8px;} </style> <div class="error">' + message +  '</div> </body>'
           view.add_phantom("errns", region, html, sublime.LAYOUT_BELOW)
 
       view.add_regions('syntaxerror', regions, 'invalid.illegal', 'dot', sublime.DRAW_NO_FILL)

@@ -45,3 +45,5 @@ Tldr (documented in first link):
 - Change `ReScript.sublime-syntax`
 - Open `syntax_test.res`
 - Command Palette -> Build With: Syntax Tests
+
+For more grammar inspirations, check ST's own [JavaScript grammar](https://github.com/sublimehq/Packages/blob/2c66f1fdea0dbc74aaa3b1c2f904040e9c1aaefa/JavaScript/JavaScript.sublime-syntax).
