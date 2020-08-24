@@ -25,7 +25,8 @@
 // ^^^^ source.res
 
 exception Hello
-//        ^ source.res
+// <- keyword
+//        ^^^^^ variable.function variable.other
 
 let a = -.0.1
 //      ^^ source.res keyword.operator
