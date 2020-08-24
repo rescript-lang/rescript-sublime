@@ -282,6 +282,7 @@ let str = `hi`
 //         ^^ source.res string.quoted.other
 //           ^ source.res string.quoted.other punctuation.definition.string.end
 let interp = j`hello $bla bye`
+//           ^ string.quoted.other variable.annotation
 //                   ^ punctuation.section.interpolation
 //                    ^^^ source.res
 //                       ^^^^^ string.quoted.other
