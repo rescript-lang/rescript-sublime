@@ -42,7 +42,7 @@ def findBsConfigDirFromFilename(filename):
 
 def formatUsingValidBscPath(code, bscPath, isInterface):
     extension = resiExt if isInterface else resExt
-    tmpobj = tempfile.NamedTemporaryFile(mode='w+', suffix=extension, delete=False)
+    tmpobj = tempfile.NamedTemporaryFile(mode='w+', suffix=extension, encoding='utf-8', delete=False)
     tmpobj.write(code)
     tmpobj.close()
     proc = subprocess.Popen(
