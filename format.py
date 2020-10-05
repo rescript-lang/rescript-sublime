@@ -4,7 +4,6 @@ import subprocess
 import re
 import os
 import tempfile
-import pathlib
 import platform
 
 SETTINGS_PATH = 'Default.sublime-settings'
@@ -187,7 +186,7 @@ class FormatCommand(sublime_plugin.TextCommand):
     if bscExe == None:
       return
 
-    extension = pathlib.Path(filename).suffix
+    _, extension = os.path.splitext(filename)
     formattedResult = formatUsingValidBscPath(
       code,
       bscExe,
