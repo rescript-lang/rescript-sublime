@@ -109,9 +109,9 @@ def parseBsbLogOutput(content):
   # map of file path to list of diagnosis
   for diagnosisLines in res:
     fileAndLocation, *diagnosisMessage = diagnosisLines
-    lastSpace = fileAndLocation.rfind(" ")
+    lastSpace = fileAndLocation.find(":")
     file = fileAndLocation[2:lastSpace]
-    location = fileAndLocation[lastSpace:]
+    location = fileAndLocation[lastSpace + 1:]
     if not file in ret:
       ret[file] = []
     cleanedUpDiagnosis = "\n".join([line[2:] for line in diagnosisMessage]).strip()

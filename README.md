@@ -4,7 +4,8 @@ The official Sublime Text plugin for ReScript.
 
 ## Prerequisite
 
-`bs-platform 8.2.0` installed locally in your project.
+- `0.0.9` requires `bs-platform >=8.3.0` installed locally in your project.
+- `0.0.8` requires `bs-platform 8.2.0` installed locally in your project.
 
 ## Install
 
