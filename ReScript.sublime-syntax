@@ -36,7 +36,7 @@ contexts:
           pop: true
 
   punctuations:
-    - match: ~
+    - match: \~
       scope: punctuation.definition.keyword
     - match: ;
       scope: punctuation.terminator
