@@ -1,0 +1,5 @@
+{
+    "target": "rescript_build",
+    "selector": "source.res",
+    // TODO: cancellation?
+}

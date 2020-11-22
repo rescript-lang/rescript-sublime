@@ -1,6 +1,10 @@
 [
   {
     "caption": "ReScript: Format File",
-    "command": "format"
+    "command": "rescript_format"
+  },
+  {
+  	"caption": "ReScript: Goto definition",
+  	"command": "rescript_goto_definition"
   }
 ]
