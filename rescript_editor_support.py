@@ -26,32 +26,52 @@ def runDumpCommand(filename, line, column):
 	    stdout=subprocess.PIPE,
 	    cwd=findBsConfigDirFromFilename(filename)
 	  )
-	stdout, stderr = proc.communicate()
-	return json.loads(stdout.decode().splitlines()[0])
 
+	stdout, stderr = proc.communicate()
+
+	if proc.returncode == 0:
+	  return {
+	    "kind": "success",
+	    "result": json.loads(stdout.decode().splitlines()[0]),
+	  }
+	else:
+		return {
+		  "kind": "error",
+		  "result": stderr.decode(),
+		}
 
 class RescriptGotoDefinition(sublime_plugin.TextCommand):
-	# TODO: multiple/zero cursors
 	def run(self, edit):
-		regions = self.view.sel()
+		selectedRegions = self.view.sel()
 
-		line, col = self.view.rowcol(regions[0].begin())
+		# no cursors/selected regions (is this even possible?)
+		if len(selectedRegions) < 1:
+			return
 
-		cmdResult = runDumpCommand(self.view.file_name(), line, col)
-		# [{'definition': {'range': {'end': {'character': 5, 'line': 26}, 'start': {'character': 4, 'line': 26}}}}]
+		# if we have more than one cursor, we only jump to the first one
+		line, col = self.view.rowcol(selectedRegions[0].begin())
 
-		row = cmdResult[0]["definition"]["range"]["start"]["line"]
-		col = cmdResult[0]["definition"]["range"]["start"]["character"]
+		cmdOutput = runDumpCommand(self.view.file_name(), line, col)
 
-		if cmdResult[0]["definition"].get('uri'):
-			p = urlparse(cmdResult[0]["definition"].get('uri'))
-			final_path = os.path.abspath(os.path.join(p.netloc, p.path))
-			self.view.window().open_file(
-					final_path + ":" + str(row + 1) + ":" + str(col + 1),
-					sublime.ENCODED_POSITION
-				)
-		else:
-			self.view.window().open_file(
-					self.view.file_name() + ":" + str(row + 1) + ":" + str(col + 1),
-					sublime.ENCODED_POSITION
-				)
+		if cmdOutput["kind"] == "success":
+			result = cmdOutput["result"]
+			if len(result) < 1:
+				# no goto definition results
+				return
+
+			definition = result[0]["definition"]
+
+			row = definition["range"]["start"]["line"]
+			col = definition["range"]["start"]["character"]
+
+			# sublime.ENCODED_POSITION is 1-indexed
+			encodedPosition = ":" + str(row + 1) + ":" + str(col + 1)
+
+			# 'uri' is absent when jumping to a location in the same file
+			filename = self.view.file_name()
+			if definition.get('uri'):
+				# parse file uri (i.e. file:///) into a normal file name
+				p = urlparse(definition.get('uri'))
+				filename = os.path.abspath(os.path.join(p.netloc, p.path))
+
+			self.view.window().open_file(filename + encodedPosition, sublime.ENCODED_POSITION)
