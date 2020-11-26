@@ -21,6 +21,8 @@ elif platformSystem == "FreeBSD":
 
 bscPartialPath = os.path.join("node_modules", "bs-platform", platformInNodeJS, "bsc.exe")
 
+bsbPartialPath = os.path.join("node_modules", "bs-platform", platformInNodeJS, "bsb.exe")
+
 def findBsConfigDirFromFilename(filename):
   currentDir = os.path.dirname(filename)
   while True:
