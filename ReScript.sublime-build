@@ -1,0 +1,15 @@
+{
+    "target": "rescript_build",
+    "selector": "source.res",
+    // TODO: cancellation?
+    "variants": [
+    	{
+            "name": "CleanWorld",
+            "task": "clean"
+        },
+        {
+        	"name": "MakeWorld",
+        	"task": "world"
+        }
+    ]
+}

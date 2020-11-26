@@ -95,13 +95,26 @@ class ReScriptCompilerProcess():
 	# A threading.Lock() used to prevent the stdout and stderr handlers from both trying to perform process cleanup at the same time
 	cleanupLock = None
 
-	def __init__(self, projectRoot):
+	def __init__(self, task, projectRoot):
 		"""
+		:param task:
+			Unicode string of "build", "clean" or "world". Defaults to "build" if absent.
+
 		:param projectRoot:
 			 A string representing the root of the project. Passed as cwd to the build process.
 		"""
 		# TODO: do we really need to store this? What use this it have?
 		self.projectRoot = projectRoot
+
+		args = [os.path.join(projectRoot, bsbPartialPath)]
+		if task == "clean":
+			args.append("-clean-world")
+		elif task == "world":
+			args.append("-make-world")
+
+
+		print("task", task)
+		print("args", args)
 
 		startupinfo = None
 		preexec_fn = None
@@ -117,7 +130,7 @@ class ReScriptCompilerProcess():
 		self.cleanupLock = threading.Lock()
 		self.startTime = time.time()
 		self.proc = subprocess.Popen(
-			[os.path.join(projectRoot, bsbPartialPath)],
+			args,
 			stdout=subprocess.PIPE,
 			stderr=subprocess.PIPE,
 			cwd=projectRoot,
@@ -356,15 +369,13 @@ def runReScriptBuildProcess(task, window, projectRoot):
 		A ReScriptCompilerProcess() object
 	"""
 	panel = fetchPanel(window)
-	proc = ReScriptCompilerProcess(projectRoot)
+	proc = ReScriptCompilerProcess(task, projectRoot)
 
 	# If no one is using the panel, reinitialize it
 	if panel.printerLock.acquire(False):
 		panel.reinitialize(window)
 		panel.printerLock.release()
 
-	# TODO: PRINTER HERE
-	# panel.printerLock.release()
 	ReScriptProcessPrinter(proc, panel)
 
 	window.run_command('show_panel', {'panel': 'output.rescript_build'})
