@@ -1,7 +1,8 @@
 {
     "target": "rescript_build",
+    // TODO: is this selector correct
     "selector": "source.res",
-    // TODO: cancellation?
+    "cancel": {"kill": true},
     "variants": [
     	{
             "name": "CleanWorld",

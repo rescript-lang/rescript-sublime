@@ -7,6 +7,7 @@ import os
 import sys
 import queue
 import time
+import signal
 
 from .rescript_utils import findBsConfigDirFromFilename, bsbPartialPath
 
@@ -112,10 +113,6 @@ class ReScriptCompilerProcess():
 		elif task == "world":
 			args.append("-make-world")
 
-
-		print("task", task)
-		print("args", args)
-
 		startupinfo = None
 		preexec_fn = None
 		if sys.platform == 'win32':
@@ -219,7 +216,6 @@ class ReScriptCompilerProcess():
 			chunk = os.read(fileno, 32768)
 			if len(chunk) == 0:
 					break
-			print(chunk.decode())
 			outputQueue.put((outputType, chunk.decode('utf-8')))
 
 	def cleanup(self):
@@ -352,6 +348,13 @@ def askUserIfCurrentBuildShouldBeCancelled(window):
 
 	return False
 
+def killRunningBuild(window):
+	proc = fetchProcess(window)
+	if proc and not proc.endTime:
+		proc.terminate()
+	if proc is not None:
+		storeProcess(window, None)
+
 def runReScriptBuildProcess(task, window, projectRoot):
 	"""
 	Starts a ReScriptCompilerProcess and creates a ReScriptCompilerProcessPrinter() for it.
@@ -390,12 +393,20 @@ class RescriptBuildCommand(sublime_plugin.WindowCommand):
 	 Command to run rescript compiler builds "bsb", "bsb -make-world" and "bsb -clean-world"
 	"""
 
-	def run(self, task="build"):
+	def run(self, task="build", kill=False):
 		"""
 		Runs the "RescriptBuild" command - invoked by Sublime Text via the command palette or sublime.Window.run_command()
+
 		:param task:
 			Unicode string of "build", "clean" or "world". Defaults to "build" if absent.
+
+		:param kill:
+		  Boolean indicating whether the current running build should be cancelled.
 		"""
+
+		if kill is True:
+			killRunningBuild(self.window)
+			return
 
 		if askUserIfCurrentBuildShouldBeCancelled(self.window):
 			return
