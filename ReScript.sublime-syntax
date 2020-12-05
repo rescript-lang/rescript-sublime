@@ -203,7 +203,7 @@ contexts:
       push: moduleAccessEndsWithModuleThenPop
 
   openOrIncludeModule:
-    - match: '\b(open|include)\s*'
+    - match: '\b(open|include)\s+'
       scope: keyword
       push: moduleAccessEndsWithModuleThenPop
 

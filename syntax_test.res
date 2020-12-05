@@ -125,6 +125,9 @@ let getProfession = (person) =>
   | rest => "..."
   }
 
+let openSesame = 1
+//  ^^^^^^^^^^ source.res
+
 open Soup
 // <- source.res keyword
 //   ^^^^ entity.name.namespace
