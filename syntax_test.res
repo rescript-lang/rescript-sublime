@@ -112,6 +112,17 @@ let getCenterCoordinates = (aBla, doHello, ~b=1, ~c, ()) => {
 //^^ keyword.operator
 //      ^^ keyword.operator
 
+a >= b
+//^ keyword.operator
+let f: (~radius: option<int>=?) = 1
+//                         ^ source.res
+//                          ^ keyword.operator.assignment
+//                           ^ punctuation.separator
+let f: (~radius: option<int>= ?) = 1
+//                         ^ source.res
+//                          ^ keyword.operator.assignment
+//                            ^ punctuation.separator
+
 type profession = Teacher | Director
 //                ^ source.res
 /* test */
