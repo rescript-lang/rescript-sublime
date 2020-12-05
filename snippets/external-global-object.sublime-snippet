@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[
+@val external ${1:setTimeout}: ${2:(unit => unit, int) => float} = "${3:setTimeout}"]]></content>
+  <tabTrigger>external</tabTrigger>
+  <scope>source.res</scope>
+</snippet>

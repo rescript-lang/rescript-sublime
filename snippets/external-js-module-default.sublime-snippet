@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[
+@module external ${1:leftPad}: ${2:(string, int) => string} = "${3:leftPad}"]]></content>
+  <tabTrigger>external</tabTrigger>
+  <scope>source.res</scope>
+</snippet>

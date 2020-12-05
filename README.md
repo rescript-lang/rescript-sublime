@@ -17,6 +17,9 @@ Get it from https://packagecontrol.io/packages/ReScript
 - Formatting: Command Palette (`cmd-shift-p`) -> ReScript: Format File. caveats:
   - Currently requires the file to be part of a ReScript project, i.e. with a `bsconfig.json`.
   - Cannot be a temporary file.
+- Snippets to ease a few syntaxes:
+  - `external` features such as `@bs.module` and `@bs.val`
+  - `try`, `for`, etc.
 
 ## Upcoming Features
 

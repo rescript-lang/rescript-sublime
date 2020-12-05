@@ -1,0 +1,6 @@
+<snippet>
+  <content><![CDATA[
+@scope("${1:Math}") @val external ${2:random}: ${3:unit => float} = "${4:random}"]]></content>
+  <tabTrigger>external</tabTrigger>
+  <scope>source.res</scope>
+</snippet>

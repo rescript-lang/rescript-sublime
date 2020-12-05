@@ -1,9 +1,9 @@
 <snippet>
   <content><![CDATA[
 module ${1:Name} = {
-  ${2:/* Module contents */}
+  ${2:// Module contents}
 }
 ]]></content>
-  <tabTrigger>mod</tabTrigger>
+  <tabTrigger>module</tabTrigger>
   <scope>source.res</scope>
 </snippet>
