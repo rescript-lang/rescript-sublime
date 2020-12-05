@@ -314,8 +314,10 @@ let interp = j`hello ${world.bla->b(a)} bye`
 //                                         ^ string.quoted.other punctuation.definition.string.end
 let variant = #foo
 //            ^ source.res punctuation.definition.keyword
+//             ^^^ variable.function variable.other
 let #...foo = bar
 //  ^^^^ punctuation.definition.keyword
+//      ^^^ variable.function variable.other
 
    @foo(bar) let a = 1
 // ^ source.res meta.annotation punctuation.definition.annotation

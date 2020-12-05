@@ -142,10 +142,12 @@ contexts:
       # variant and modules confused
       # scope: entity.name.union
       scope: variable.function variable.other
-    - match: '(#)(\.\.\.)?[a-zA-Z][0-9a-zA-Z_]*\b'
+    - match: '(#)(\.\.\.)?([a-zA-Z][0-9a-zA-Z_]*)\b'
       captures:
         1: punctuation.definition.keyword
         2: punctuation.definition.keyword
+        # see comment above
+        3: variable.function variable.other
 
   array:
     - match: '\['
