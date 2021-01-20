@@ -8,6 +8,11 @@
 
 /* hello
 // <- source.res comment.block punctuation.definition.comment.begin
+    /* nested
+//  ^^ comment.block comment.block punctuation.definition.comment.begin
+       bla
+    */
+//  ^^ comment.block comment.block punctuation.definition.comment.end
   world */
 //^ source.res comment.block
 //       ^ source.res comment.block punctuation.definition.comment.end

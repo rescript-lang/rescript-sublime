@@ -31,6 +31,7 @@ contexts:
       scope: punctuation.definition.comment.begin
       push:
         - meta_scope: comment.block
+        - include: commentBlock
         - match: \*/
           scope: punctuation.definition.comment.end
           pop: true
