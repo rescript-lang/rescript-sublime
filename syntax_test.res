@@ -165,6 +165,7 @@ Foo.Some(Bar())
 Foo.make(Bar())
 module Bla = Belt.Map.Make(Bar({type t let a:b = "cc"}))
 //     ^ source.res entity.name.namespace
+//         ^ keyword.operator.assignment
 //           ^ source.res entity.name.namespace
 //                    ^ source.res entity.name.namespace
 //                        ^ source.res punctuation.section.parens.begin
