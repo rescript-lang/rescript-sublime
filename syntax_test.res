@@ -159,10 +159,13 @@ include Belt.Map.Make()
 Foo.Some(Bar)
 // <- source.res entity.name.namespace
 //     ^ source.res
+//       ^^^ variable.function variable.other
 //          ^ source.res
 Foo.Some(Bar())
 //       ^ source.res
+//       ^^^ variable.function variable.other
 Foo.make(Bar())
+//       ^^^ variable.function variable.other
 module Bla = Belt.Map.Make(Bar({type t let a:b = "cc"}))
 //     ^ source.res entity.name.namespace
 //         ^ keyword.operator.assignment
@@ -183,13 +186,13 @@ module SetOfIntPairs = MakeSet((IntPair), Bar);
 //                                        ^ source.res entity.name.namespace
 module SetOfIntPairs = MakeSet(IntPair({type t = Bar}))
 //                             ^ source.res entity.name.namespace
-//                                               ^^^ entity.name.namespace
+//                                               ^^^ variable.function variable.other
 module Foo = (Bar: Baz) => (Bar: Baz) => {let a = Bar};
 //            ^ source.res entity.name.namespace
 //                 ^ source.res entity.name.namespace
 //                          ^ source.res entity.name.namespace
 //                               ^ source.res entity.name.namespace
-//                                                ^ source.res
+//                                                ^^^ variable.function variable.other
 module Foo = (Bar: Baz) => (Bar: Baz) => List;
 //                                       ^ source.res entity.name.namespace
 
@@ -220,7 +223,7 @@ module School = {
 //       ^ source.res entity.name.namespace
     {
       type a = Bar
-//             ^ source.res
+//             ^^^ variable.function variable.other
       let a = ["1"]
     }
   ) => {
@@ -243,24 +246,25 @@ module School = {
   module Nested = (Foo: Bar, {type a = Bar let a = 1 } ) => {
 //                 ^ source.res entity.name.namespace
 //                      ^ source.res entity.name.namespace
-//                                     ^ source.res
+//                                     ^^^ variable.function variable.other
     module NestMore = Bla
     module NestMore: Foo = Bla
     module NestMore: {type t = Bar} = Bla
 //                   ^ source.res punctuation.section.braces.begin
-//                             ^ source.res
+//                             ^^^ variable.function variable.other
 //                                ^ source.res punctuation.section.braces.end
 //                                    ^ source.res entity.name.namespace
     module NestMore: {type t = Bar} = {
-//                             ^ source.res
+//                             ^^^ variable.function variable.other
       type t = Variant
-//             ^ source.res
+//             ^^^^^^^ variable.function variable.other
       let a = ["hello"]
     }
     module NestMore = (Foo: {type t = Variant}) => Bla
+//                                    ^^^^^^^ variable.function variable.other
     module NestMore: Bla = (Foo: {}) => Bla
     module NestMore: {type t = Bar let a: b = "cc" module Foo = {}} = (Foo: {}) => Bla
-//                             ^ source.res
+//                             ^^^ variable.function variable.other
 //                                                        ^ source.res entity.name.namespace
     module type NestMore = {}
     module NestMore = () => Bla.Qux
@@ -272,7 +276,7 @@ let p: School.School2.profession = School.getProfession(School.Foo)
 //     ^ source.res entity.name.namespace
 //            ^ source.res entity.name.namespace
 //                                                      ^ source.res entity.name.namespace
-//                                                             ^ source.res
+//                                                             ^^^ variable.function variable.other
 
 let getAudience = (~excited) => excited ? "world!" : "world"
 

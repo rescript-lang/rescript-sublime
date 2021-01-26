@@ -137,7 +137,7 @@ contexts:
   constructor:
     - match: '\b[A-Z][0-9a-zA-Z_]*\b'
       # won't mark and highlight this for now. This often shares the same
-      # highlighting as entity.name.namespace (our module). We don't want
+      # highlighting as entity.name.namespace our module). We don't want
       # variant and modules confused
       # scope: entity.name.union
       scope: variable.function variable.other
@@ -235,6 +235,9 @@ contexts:
     - match: \)
       scope: punctuation.section.parens.end
       pop: true
+    - match: \{
+      scope: punctuation.section.braces.begin
+      push: moduleInner
     - include: moduleAccessEndsWithModule
     - include: main
 
