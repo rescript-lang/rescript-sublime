@@ -1,56 +1,89 @@
 // SYNTAX TEST "ReScript.sublime-syntax"
 
 // hi
-// ^ source.res comment.line
+// ^ comment.line
 
 //
-// <- source.res comment.line punctuation.definition.comment
+// <- comment.line punctuation.definition.comment
 
 /* hello
-// <- source.res comment.block punctuation.definition.comment.begin
+// <- comment.block punctuation.definition.comment.begin
     /* nested
 //  ^^ comment.block comment.block punctuation.definition.comment.begin
        bla
     */
 //  ^^ comment.block comment.block punctuation.definition.comment.end
   world */
-//^ source.res comment.block
-//       ^ source.res comment.block punctuation.definition.comment.end
+//^ comment.block
+//       ^ comment.block punctuation.definition.comment.end
+
+
+// === binding
+
+let myBinding = 5
+// <- keyword
+//            ^ keyword.operator
+
+
+// === string
 
    "aa";
-// ^ source.res string.quoted.double punctuation.definition.string.begin
-//  ^^ source.res string.quoted.double
-//    ^ source.res string.quoted.double punctuation.definition.string.end
-//     ^ source.res punctuation.terminator
+// ^ string.quoted.double punctuation.definition.string.begin
+//  ^^ string.quoted.double
+//    ^ string.quoted.double punctuation.definition.string.end
+//     ^ punctuation.terminator
 
    'a'
-// ^^^ source.res string.quoted.single
+// ^^^ string.quoted.single
 
    'ab'
 // ^^^^ source.res
 
-exception Hello
-// <- keyword
-//        ^^^^^ variable.function variable.other
+let \"a b" = c
+let str = `hi`
+//        ^ string.quoted.other punctuation.definition.string.begin
+//         ^^ string.quoted.other
+//           ^ string.quoted.other punctuation.definition.string.end
+let interp = j`hello $bla bye`
+//           ^ string.quoted.other variable.annotation
+//                   ^ punctuation.section.interpolation
+//                    ^^^ source.res
+//                       ^^^^^ string.quoted.other
+let interp = j`hello $1 bye`
+//                    ^^^^^^ string.quoted.other
+let interp = j`hi ${world.bla->b(a)} bye`
+//            ^ string.quoted.other punctuation.definition.string.begin
+//             ^^^ string.quoted.other
+//                ^^ punctuation.section.interpolation.begin
+//                       ^ punctuation.accessor
+//                           ^^ keyword.operator
+//                              ^ punctuation.section.parens.begin
+//                                 ^ punctuation.section.interpolation.end
+//                                   ^^^ string.quoted.other
+//                                      ^ string.quoted.other punctuation.definition.string.end
+
+
+// === numbers
 
 let a = -.0.1
-//      ^^ source.res keyword.operator
-//        ^^^ source.res constant.numeric
+//      ^^ keyword.operator
+//        ^^^ constant.numeric
 let a = 0b1
-//    ^ source.res keyword.operator
-//      ^^^ source.res constant.numeric
+//    ^ keyword.operator
+//      ^^^ constant.numeric
 let a = 0o73
-//      ^^^^ source.res constant.numeric
+//      ^^^^ constant.numeric
 let a = 0xff
-//      ^^^^ source.res constant.numeric
+//      ^^^^ constant.numeric
 let a = 0Xff
-//      ^^^^ source.res constant.numeric
+//      ^^^^ constant.numeric
 let a = +1_000_000.12
-//      ^ source.res keyword.operator
-//       ^^^^^^^^^^^^ source.res constant.numeric
+//      ^ keyword.operator
+//       ^^^^^^^^^^^^ constant.numeric
 let a = 1E3
-//      ^^^source.res constant.numeric
-// bad
+//      ^^^constant.numeric
+
+// negative examples. Shouldn't assign numeric scope
 let a = 0bf
 //      ^^^source.res
 let a = 0o58
@@ -58,106 +91,183 @@ let a = 0o58
 let a = 0xfz
 //      ^^^^source.res
 let a = -.1
-//      ^^ source.res keyword.operator
+//      ^^ keyword.operator
 //        ^source.res
 let a = 1.
-//      ^source.res constant.numeric
-//       ^source.res punctuation.accessor
+//      ^constant.numeric
+//       ^punctuation.accessor
 let a = .2
-//      ^source.res punctuation.accessor
-//       ^source.res constant.numeric
+//      ^punctuation.accessor
+//       ^constant.numeric
 
+
+// === other primitives
 let bar = true
-// <- source.res keyword
-//        ^source.res constant.language
-let recordAccess = fooRecord.myName
-//                          ^source.res punctuation.accessor
-let recordAccessWithScope = fooRecord.ReasonReact.myName
-//                                    ^source.res entity.name.namespace
+//        ^^^^ constant.language
+let baz = false
+//        ^^^^^ constant.language
+
+
+// === collections
 
 let [1, 2.2] = foo()
-//   ^ source.res constant.numeric
-//      ^^^ source.res constant.numeric
+//   ^ constant.numeric
+//      ^^^ constant.numeric
 let [c, [a, [1], list{a, ...rest},  c], 2.2] = [c, 1, "d", 'a', 1+2]
-//               ^ source.res keyword
-//                       ^ source.res keyword.operator
+//               ^ keyword
+//                       ^ keyword.operator
+
+let asd = ["bar"]
+let asd = list{"bar"}
+//        ^^^^ keyword
+let asd = foo["bar"]
+//        ^ source.res
+foo["bar"] = baz
+// <- source.res
+
+
+// === record
 
 type bla<'a> = {
-// <- source.res storage.type
-//             ^ source.res punctuation.section.braces.begin
+// <- storage.type
+//             ^ punctuation.section.braces.begin
   a: int,
-     // ^ source.res punctuation.separator
+// ^ punctuation.separator
+//      ^ punctuation.separator
   ok: 'a,
 }
-// <- source.res punctuation.section.braces.end
+// <- punctuation.section.braces.end
+
+let recordAccess = fooRecord.myName
+//                          ^ punctuation.accessor
+let recordAccessWithScope = fooRecord.ReasonReact.myName
+//                                    ^entity.name.namespace
+
+
+// === variant
+
+exception Hello
+// <- keyword
+//        ^^^^^ variable.function variable.other
+type profession = Teacher | Director
+//                ^^^^^^^ variable.function variable.other
+let person1 = Teacher
+//            ^^^^^^^ variable.function variable.other
+
+try (getItem([1, 2, 3])) {
+| Not_found => 0 /* Default value if getItem throws */
+// <- punctuation.separator
+//               ^ comment.block
+}
+
+switch person {
+| [Teacher] => "A teacher"
+// <- punctuation.separator
+//^ punctuation.section.brackets.begin
+// ^^^^^^^ variable.function variable.other
+//          ^^ storage.type.function keyword.declaration.function
+| Director => "A director"
+//^^^^^^^^ variable.function variable.other
+| rest => "..."
+}
+
+let polymorphicVariant = #hey
+//                       ^ punctuation.definition.keyword
+//                        ^^^ variable.function variable.other
+let #...restPattern = myPolyVariant
+//  ^^^^ punctuation.definition.keyword
+//      ^^^^^^^^^^^ variable.function variable.other
+
+// === function
 
 let getItem = (theList) =>
+//                      ^^ storage.type.function keyword.declaration.function
   if callSomeFunctionThatThrows() {
     /* return the found item here */
-//  ^ source.res comment.block
+//  ^ comment.block
   } else {
     raise(Not_found)
   }
 
-let result =
-  try (getItem([1, 2, 3])) {
-  | Not_found => 0 /* Default value if getItem throws */
-//^ source.res punctuation.separator
-              //   ^ source.res comment.block
-  }
-
-let getCenterCoordinates = (aBla, doHello, ~b=1, ~c, ()) => {
-                                        // ^ source.res punctuation.definition.keyword
+let getCenterCoordinates = (aBla, ~b=1, ~c=?, ()) => {
+//                       ^ keyword.operator
+//                                ^ punctuation.definition.keyword
+//                                         ^ punctuation.separator
   let x = doSomeOperationsHere("a")
   let yy = doSomeMoreOperationsHere()
   (x, y)
 }
 
+
+// === operators
+
  a->b(c)->Some
 //^^ keyword.operator
 //      ^^ keyword.operator
 
-a >= b
-//^ keyword.operator
-let f: (~radius: option<int>=?) = 1
-//                         ^ source.res
-//                          ^ keyword.operator.assignment
-//                           ^ punctuation.separator
-let f: (~radius: option<int>= ?) = 1
-//                         ^ source.res
-//                          ^ keyword.operator.assignment
-//                            ^ punctuation.separator
+a > b && a < b && a >= b
+//    ^^ keyword.operator
+//                  ^^ keyword.operator
+a <= b || a == (b === c)
+//^^ keyword.operator
+//     ^^ keyword.operator
+//          ^^ keyword.operator
+//                ^^^ keyword.operator
 
-type profession = Teacher | Director
-//                ^ source.res
-/* test */
 
-let person1 = Teacher
-//            ^ source.res
-let getProfession = (person) =>
-  switch person {
-  | [Teacher] => "A teacher"
-  | Director => "A director"
-  | rest => "..."
-  }
+// negative examples
+let f: (~r: option<int>=?) = 1
+//                    ^ source.res
+//                     ^ keyword.operator
+//                      ^ punctuation.separator
+let f: (~r: option<int>= ?) = 1
+//                    ^ source.res
+//                     ^ keyword.operator
+//                       ^ punctuation.separator
+
+
+// === jsx
+
+let myComponent = <div className="foo">
+  <>
+    <img src="avatar.png" className="profile" />
+    <h3>{[user.firstName, user.lastName].join(" ")}</h3>
+  </>
+  <Comp.Uter bar />
+// ^ entity.name.namespace
+//      ^ entity.name.namespace
+  <Foo>
+// ^ entity.name.namespace
+    "hi"
+  </Foo>
+//  ^ entity.name.namespace
+  <Foo.Bar> {"hi"} </Foo.Bar>
+//     ^ entity.name.namespace
+//                       ^ entity.name.namespace
+  <Comp bar />
+// ^ entity.name.namespace
+</div>
+
+
+// === module
 
 let openSesame = 1
 //  ^^^^^^^^^^ source.res
 
 open Soup
-// <- source.res keyword
+// <- keyword
 //   ^^^^ entity.name.namespace
 include {let a = 1}
 // <- keyword
-//       ^ source.res keyword
+//       ^ keyword
 open Belt.Map
-//   ^ source.res entity.name.namespace
-//        ^ source.res entity.name.namespace
+//   ^ entity.name.namespace
+//        ^ entity.name.namespace
 include Belt.Map.Make()
-//               ^ source.res entity.name.namespace
+//               ^ entity.name.namespace
 
 Foo.Some(Bar)
-// <- source.res entity.name.namespace
+// <- entity.name.namespace
 //     ^ source.res
 //       ^^^ variable.function variable.other
 //          ^ source.res
@@ -167,46 +277,46 @@ Foo.Some(Bar())
 Foo.make(Bar())
 //       ^^^ variable.function variable.other
 module Bla = Belt.Map.Make(Bar({type t let a:b = "cc"}))
-//     ^ source.res entity.name.namespace
-//         ^ keyword.operator.assignment
-//           ^ source.res entity.name.namespace
-//                    ^ source.res entity.name.namespace
-//                        ^ source.res punctuation.section.parens.begin
-//                         ^ source.res entity.name.namespace
-//                            ^ source.res punctuation.section.parens.begin
-//                              ^ source.res storage.type
-//                                                    ^ source.res punctuation.section.parens.end
-//                                                     ^ source.res punctuation.section.parens.end
+//     ^ entity.name.namespace
+//         ^ keyword.operator
+//           ^ entity.name.namespace
+//                    ^ entity.name.namespace
+//                        ^ punctuation.section.parens.begin
+//                         ^ entity.name.namespace
+//                            ^ punctuation.section.parens.begin
+//                              ^ storage.type
+//                                                    ^ punctuation.section.parens.end
+//                                                     ^ punctuation.section.parens.end
 module SetOfIntPairs: Foo = MakeSet(IntPair)
-//                    ^ source.res entity.name.namespace
-//                          ^ source.res entity.name.namespace
-//                                  ^ source.res entity.name.namespace
+//                    ^ entity.name.namespace
+//                          ^ entity.name.namespace
+//                                  ^ entity.name.namespace
 module SetOfIntPairs = MakeSet((IntPair), Bar);
-//                              ^ source.res entity.name.namespace
-//                                        ^ source.res entity.name.namespace
+//                              ^ entity.name.namespace
+//                                        ^ entity.name.namespace
 module SetOfIntPairs = MakeSet(IntPair({type t = Bar}))
-//                             ^ source.res entity.name.namespace
+//                             ^ entity.name.namespace
 //                                               ^^^ variable.function variable.other
 module Foo = (Bar: Baz) => (Bar: Baz) => {let a = Bar};
-//            ^ source.res entity.name.namespace
-//                 ^ source.res entity.name.namespace
-//                          ^ source.res entity.name.namespace
-//                               ^ source.res entity.name.namespace
+//            ^ entity.name.namespace
+//                 ^ entity.name.namespace
+//                          ^ entity.name.namespace
+//                               ^ entity.name.namespace
 //                                                ^^^ variable.function variable.other
 module Foo = (Bar: Baz) => (Bar: Baz) => List;
-//                                       ^ source.res entity.name.namespace
+//                                       ^ entity.name.namespace
 
 module Nested = (Foo: {}) => {
   module NestMore = Bla
-//       ^ source.res entity.name.namespace
-//                  ^ source.res entity.name.namespace
+//       ^ entity.name.namespace
+//                  ^ entity.name.namespace
 }
 module type Bla = {
-//          ^ source.res entity.name.namespace
+//          ^ entity.name.namespace
   include (module type of BaseComponent)
-//                        ^ source.res entity.name.namespace
+//                        ^ entity.name.namespace
 }
-/* test */
+
 module School = {
   type profession = Teacher | Director
   /* test */
@@ -219,8 +329,8 @@ module School = {
     }
   module Nested = (
     Foo: Bar,
-//  ^ source.res entity.name.namespace
-//       ^ source.res entity.name.namespace
+//  ^ entity.name.namespace
+//       ^ entity.name.namespace
     {
       type a = Bar
 //             ^^^ variable.function variable.other
@@ -229,31 +339,31 @@ module School = {
   ) => {
     module NestMore =
       Bla
-//    ^ source.res entity.name.namespace
+//    ^ entity.name.namespace
     module NestMore = (Foo: {}) => Bla
-//                     ^ source.res entity.name.namespace
-//                                 ^ source.res entity.name.namespace
+//                     ^ entity.name.namespace
+//                                 ^ entity.name.namespace
   }
   module Nested2 = (
     Foo: Bar,
-//  ^ source.res entity.name.namespace
-//       ^ source.res entity.name.namespace
+//  ^ entity.name.namespace
+//       ^ entity.name.namespace
     Bar: Baz,
-//  ^ source.res entity.name.namespace
-//       ^ source.res entity.name.namespace
+//  ^ entity.name.namespace
+//       ^ entity.name.namespace
   ) => List
-//     ^ source.res entity.name.namespace
+//     ^ entity.name.namespace
   module Nested = (Foo: Bar, {type a = Bar let a = 1 } ) => {
-//                 ^ source.res entity.name.namespace
-//                      ^ source.res entity.name.namespace
+//                 ^ entity.name.namespace
+//                      ^ entity.name.namespace
 //                                     ^^^ variable.function variable.other
     module NestMore = Bla
     module NestMore: Foo = Bla
     module NestMore: {type t = Bar} = Bla
-//                   ^ source.res punctuation.section.braces.begin
+//                   ^ punctuation.section.braces.begin
 //                             ^^^ variable.function variable.other
-//                                ^ source.res punctuation.section.braces.end
-//                                    ^ source.res entity.name.namespace
+//                                ^ punctuation.section.braces.end
+//                                    ^ entity.name.namespace
     module NestMore: {type t = Bar} = {
 //                             ^^^ variable.function variable.other
       type t = Variant
@@ -265,100 +375,54 @@ module School = {
     module NestMore: Bla = (Foo: {}) => Bla
     module NestMore: {type t = Bar let a: b = "cc" module Foo = {}} = (Foo: {}) => Bla
 //                             ^^^ variable.function variable.other
-//                                                        ^ source.res entity.name.namespace
+//                                                        ^ entity.name.namespace
     module type NestMore = {}
     module NestMore = () => Bla.Qux
-//                              ^ source.res entity.name.namespace
+//                              ^ entity.name.namespace
   }
 }
 
 let p: School.School2.profession = School.getProfession(School.Foo)
-//     ^ source.res entity.name.namespace
-//            ^ source.res entity.name.namespace
-//                                                      ^ source.res entity.name.namespace
+//     ^ entity.name.namespace
+//            ^ entity.name.namespace
+//                                                      ^ entity.name.namespace
 //                                                             ^^^ variable.function variable.other
 
 let getAudience = (~excited) => excited ? "world!" : "world"
 
-let jsx = <div className="foo">
-  <>
-    hi
-  </>
-  <Comp.Uter bar />
-// ^ source.res entity.name.namespace
-//      ^ source.res entity.name.namespace
-  <Foo>
-// ^ source.res entity.name.namespace
-    "hi"
-  </Foo>
-//  ^ source.res entity.name.namespace
-  <Foo.Bar> {"hi"} </Foo.Bar>
-//     ^ source.res entity.name.namespace
-//                       ^ source.res entity.name.namespace
-  <Comp bar />
-// ^ source.res entity.name.namespace
-</div>
 
-
-let \"a b" = c
-let str = `hi`
-//        ^ source.res string.quoted.other punctuation.definition.string.begin
-//         ^^ source.res string.quoted.other
-//           ^ source.res string.quoted.other punctuation.definition.string.end
-let interp = j`hello $bla bye`
-//           ^ string.quoted.other variable.annotation
-//                   ^ punctuation.section.interpolation
-//                    ^^^ source.res
-//                       ^^^^^ string.quoted.other
-let interp = j`hello $1 bye`
-//                    ^^^^^^ string.quoted.other
-let interp = j`hello ${world.bla->b(a)} bye`
-//            ^ source.res string.quoted.other punctuation.definition.string.begin
-//             ^ source.res string.quoted.other
-//                   ^^ source.res punctuation.section.interpolation.begin
-//                          ^ punctuation.accessor
-//                              ^^ keyword.operator
-//                                 ^ punctuation.section.parens.begin
-//                                    ^ punctuation.section.interpolation.end
-//                                      ^^^ string.quoted.other
-//                                         ^ string.quoted.other punctuation.definition.string.end
-let variant = #foo
-//            ^ source.res punctuation.definition.keyword
-//             ^^^ variable.function variable.other
-let #...foo = bar
-//  ^^^^ punctuation.definition.keyword
-//      ^^^ variable.function variable.other
+// === attribute
 
    @foo(bar) let a = 1
-// ^ source.res meta.annotation punctuation.definition.annotation
-//  ^^^ source.res meta.annotation variable.annotation
+// ^ meta.annotation punctuation.definition.annotation
+//  ^^^ meta.annotation variable.annotation
 @foo (bar) let a = 1
 @foo(@bar(baz)) let a = 1
-//   ^ source.res meta.annotation punctuation.definition.annotation
-//    ^^^ source.res meta.annotation variable.annotation
+//   ^ meta.annotation punctuation.definition.annotation
+//    ^^^ meta.annotation variable.annotation
 @foo let a = 1
    @@foo let a = 1
-// ^^ source.res meta.annotation punctuation.definition.annotation
+// ^^ meta.annotation punctuation.definition.annotation
 @@foo(bar) let a = 1
    %foo(bar)-2
-// ^ source.res meta.annotation punctuation.definition.annotation
-//  ^^^ source.res meta.annotation variable.annotation
+// ^ meta.annotation punctuation.definition.annotation
+//  ^^^ meta.annotation variable.annotation
+
+
+// === extension point
+
 %foo (bar)-2
 %foo-1
    %%foo let a = 1
-// ^^ source.res meta.annotation punctuation.definition.annotation
-//   ^^^ source.res meta.annotation variable.annotation
+// ^^ meta.annotation punctuation.definition.annotation
+//   ^^^ meta.annotation variable.annotation
 %%foo(bar) let a = 1
 %%foo (bar) let a = 1
 
-@bs.module external foo: {..} => {..} = "bla"
-//                        ^^ source.res keyword.operator
-//                                ^^ source.res keyword.operator
 
-let asd = ["bar"]
-let asd = list{"bar"}
-//        ^ source.res keyword
-let asd = foo["bar"]
-//        ^ source.res
-foo["bar"] = baz
-// <- source.res
+// === external
+
+@bs.module external foo: {..} => {..} = "bla"
+//                        ^^ keyword.operator
+//                            ^^ keyword.operator
+//                                ^^ keyword.operator
