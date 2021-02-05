@@ -269,7 +269,7 @@ contexts:
           captures:
             1: punctuation.section.braces.begin
           push: moduleInner
-        - match: '='
+        - match: '=[^\S]'
           scope: keyword.operator.assignment
           set: moduleRHS
         - match: '(?=\S)'

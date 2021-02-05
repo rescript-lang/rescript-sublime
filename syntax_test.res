@@ -424,5 +424,5 @@ let getAudience = (~excited) => excited ? "world!" : "world"
 
 @bs.module external foo: {..} => {..} = "bla"
 //                        ^^ keyword.operator
-//                            ^^ keyword.operator
+//                            ^^ storage.type.function keyword.declaration.function
 //                                ^^ keyword.operator
