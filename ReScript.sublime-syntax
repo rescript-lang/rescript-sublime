@@ -128,10 +128,8 @@ contexts:
 
   operator:
     - match:
-        '->|\|\||&&|\+\+|\*\*|\+\.|\+|-\.|-|\*\.|\*|/\.|/|\.\.\.|\.\.|\|>|===|==|\^|:=|!|>=(?! *\?)|<='
+        '->|\|\||&&|\+\+|\*\*|\+\.|\+|-\.|-|\*\.|\*|/\.|/|\.\.\.|\.\.|\|>|===|==|\^|:=|!|>=(?! *\?)|<=|='
       scope: keyword.operator
-    - match: '='
-      scope: keyword.operator.assignment
 
   # doesn't contain ` unlike reason-highlightjs
   constructor:
@@ -270,7 +268,7 @@ contexts:
             1: punctuation.section.braces.begin
           push: moduleInner
         - match: '=[^\S]'
-          scope: keyword.operator.assignment
+          scope: keyword.operator
           set: moduleRHS
         - match: '(?=\S)'
           pop: true
