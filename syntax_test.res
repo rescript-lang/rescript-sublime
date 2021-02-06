@@ -83,6 +83,17 @@ let a = +1_000_000.12
 let a = 1E3
 //      ^^^constant.numeric
 
+// to reconsider
+let a = -.1
+//      ^^ keyword.operator
+//        ^ constant.numeric
+let a = 1.
+//      ^ constant.numeric
+//       ^ punctuation.accessor
+let a = .2
+//      ^ punctuation.accessor
+//       ^ constant.numeric
+
 // negative examples. Shouldn't assign numeric scope
 let a = 0bf
 //      ^^^source.res
@@ -90,18 +101,10 @@ let a = 0o58
 //      ^^^^source.res
 let a = 0xfz
 //      ^^^^source.res
-let a = -.1
-//      ^^ keyword.operator
-//        ^source.res
-let a = 1.
-//      ^constant.numeric
-//       ^punctuation.accessor
-let a = .2
-//      ^punctuation.accessor
-//       ^constant.numeric
 
 
 // === other primitives
+
 let bar = true
 //        ^^^^ constant.language
 let baz = false
