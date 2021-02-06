@@ -425,7 +425,24 @@ let getAudience = (~excited) => excited ? "world!" : "world"
 
 // === external
 
-@bs.module external foo: {..} => {..} = "bla"
-//                        ^^ keyword.operator
-//                            ^^ storage.type.function keyword.declaration.function
-//                                ^^ keyword.operator
+  @module external foo: {..} => {..} = "bla"
+// ^^^^^^ meta.annotation variable.annotation
+//                       ^^ keyword.operator
+//                           ^^ storage.type.function keyword.declaration.function
+//                               ^^ keyword.operator
+
+
+// === deprecated
+
+myList |> map
+//     ^^ invalid.deprecated
+  @bs.send.pipe external a: b => c = ""
+// ^^^^^^^^^^^^ meta.annotation invalid.deprecated
+  @bs.module external a: b = ""
+// ^^^ meta.annotation invalid.deprecated
+  @splice external a: b = ""
+// ^^^^^^ meta.annotation invalid.illegal
+  @bs.variadic external a: b = ""
+// ^^^ meta.annotation invalid.deprecated
+  @variadic external a: b = "" // works
+// ^^^^^^^^ meta.annotation variable.annotation

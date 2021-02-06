@@ -128,8 +128,10 @@ contexts:
 
   operator:
     - match:
-        '->|\|\||&&|\+\+|\*\*|\+\.|\+|-\.|-|\*\.|\*|/\.|/|\.\.\.|\.\.|\|>|===|==|\^|:=|!|>=(?! *\?)|<=|='
+        '->|\|\||&&|\+\+|\*\*|\+\.|\+|-\.|-|\*\.|\*|/\.|/|\.\.\.|\.\.|\|===|==|\^|:=|!|>=(?! *\?)|<=|='
       scope: keyword.operator
+    - match: '\|>'
+      scope: invalid.deprecated
 
   # doesn't contain ` unlike reason-highlightjs
   constructor:
@@ -178,13 +180,16 @@ contexts:
       push: attributeContent
   attributeContent:
     - meta_scope: meta.annotation
-    # - match: '{{RE_ATTRIBUTE}} *\('
-    #   scope: variable.annotation
-    #   push:
-    #     - match: \)
-    #     pop: true
-    - match: '{{RE_ATTRIBUTE}}'
-      scope: variable.annotation
+    - match: 'bs\.send\.pipe'
+      scope: invalid.deprecated
+      pop: true
+    - match: 'splice'
+      scope: invalid.illegal
+      pop: true
+    - match: '(bs\.)?({{RE_ATTRIBUTE}})'
+      captures:
+        1: invalid.deprecated
+        2: variable.annotation
       pop: true
 
   jsx:
