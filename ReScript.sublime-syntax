@@ -129,7 +129,10 @@ contexts:
   operator:
     - match:
         '->|\|\||&&|\+\+|\*\*|\+\.|\+|-\.|-|\*\.|\*|/\.|/|\.\.\.|\.\.|\|===|==|\^|:=|!|>=(?! *\?)|<=|='
-      scope: keyword.operator
+      # gotta add `keyword` to this scope. This file is synced with our vscode
+      # textmate grammar too, and many themes there don't highlight
+      # `keyword.operator`. So we'll highlight them as `keyword`
+      scope: keyword.operator keyword.
     - match: '\|>'
       scope: invalid.deprecated
 
@@ -273,7 +276,7 @@ contexts:
             1: punctuation.section.braces.begin
           push: moduleInner
         - match: '=[^\S]'
-          scope: keyword.operator
+          scope: keyword.operator keyword
           set: moduleRHS
         - match: '(?=\S)'
           pop: true
