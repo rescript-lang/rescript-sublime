@@ -436,6 +436,8 @@ let getAudience = (~excited) => excited ? "world!" : "world"
 
 myList |> map
 //     ^^ invalid.deprecated
+let a = %bs.raw("1")
+//       ^^^ meta.annotation invalid.deprecated
   @bs.send.pipe external a: b => c = ""
 // ^^^^^^^^^^^^ meta.annotation invalid.deprecated
   @bs.module external a: b = ""
