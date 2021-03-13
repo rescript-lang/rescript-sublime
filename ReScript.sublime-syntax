@@ -13,7 +13,7 @@ variables:
 
   # slightly different than reason-highlightjs
   RE_KEYWORDS:
-    \b(and|as|assert|begin|class|constraint|done|downto|exception|external|fun|functor|inherit|lazy|let|pub|mutable|new|nonrec|object|of|or|pri|rec|then|to|val|virtual|try|catch|finally|do|else|for|if|switch|while|import|library|export|module|in|raise|private)\b
+    \b(and|as|assert|constraint|downto|else|exception|external|false|for|if|in|include|lazy|let|module|mutable|of|open|rec|switch|to|true|try|type|when|while|with)\b
   RE_LITERAL: \b(true|false)\b
 
 contexts:
