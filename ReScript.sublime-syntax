@@ -151,7 +151,7 @@ contexts:
         # see comment above
         3: variable.function variable.other
 
-  array:
+  bracketAccess:
     - match: '\['
       scope: punctuation.section.brackets.begin
     - match: '\]'
@@ -164,15 +164,6 @@ contexts:
         2: punctuation.section.braces.begin
     - match: '\}'
       scope: punctuation.section.braces.end
-
-  objectAccess:
-    - match: '\b{{RE_IDENT}}(\[)'
-      captures:
-        # technically this should be punctuation.accessor. But we don't wrap
-        # the section, so we'll just conform to list and array brackets
-        1: punctuation.section.brackets.begin
-    - match: '\]'
-      scope: punctuation.section.brackets.end
 
   attribute:
     - match: '@@?'
@@ -298,8 +289,7 @@ contexts:
     - include: attribute
     - include: function
     - include: list
-    - include: objectAccess
-    - include: array
+    - include: bracketAccess
     - include: jsx
     - include: operator
     - include: number

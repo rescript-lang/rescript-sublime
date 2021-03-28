@@ -105,10 +105,9 @@ let a = 0xfz
 
 // === other primitives
 
-let bar = true
+let bar = true && false
 //        ^^^^ constant.language
-let baz = false
-//        ^^^^^ constant.language
+//                ^^^^^ constant.language
 
 
 // === collections
@@ -121,13 +120,13 @@ let [c, [a, [1], list{a, ...rest},  c], 2.2] = [c, 1, "d", 'a', 1+2]
 //                       ^ keyword.operator
 
 let asd = ["bar"]
+//        ^ punctuation.section.brackets.begin
+//              ^ punctuation.section.brackets.end
 let asd = list{"bar"}
 //        ^^^^ keyword
 let asd = foo["bar"]
-//        ^ source.res
-foo["bar"] = baz
-// <- source.res
-
+//           ^ punctuation.section.brackets.begin
+//                 ^ punctuation.section.brackets.end
 
 // === record
 
