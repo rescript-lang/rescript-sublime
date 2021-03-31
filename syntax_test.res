@@ -132,11 +132,13 @@ let asd = foo["bar"]
 
 type bla<'a> = {
 // <- storage.type
+//       ^^ support.type
 //             ^ punctuation.section.braces.begin
   a: int,
 // ^ punctuation.separator
 //      ^ punctuation.separator
   ok: 'a,
+//    ^^ support.type
 }
 // <- punctuation.section.braces.end
 
