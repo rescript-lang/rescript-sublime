@@ -46,11 +46,10 @@ let str = `hi`
 //           ^ string.quoted.other punctuation.definition.string.end
 let interp = j`hello $bla bye`
 //           ^ string.quoted.other variable.annotation
-//                   ^ punctuation.section.interpolation
-//                    ^^^ source.res
+//                   ^^^^ source.res
 //                       ^^^^^ string.quoted.other
 let interp = j`hello $1 bye`
-//                    ^^^^^^ string.quoted.other
+//                   ^^^^^^^ string.quoted.other
 let interp = j`hi ${world.bla->b(a)} bye`
 //            ^ string.quoted.other punctuation.definition.string.begin
 //             ^^^ string.quoted.other
@@ -61,7 +60,17 @@ let interp = j`hi ${world.bla->b(a)} bye`
 //                                 ^ punctuation.section.interpolation.end
 //                                   ^^^ string.quoted.other
 //                                      ^ string.quoted.other punctuation.definition.string.end
-
+let asd = `a${hello(`world ${hi} bye`)}b$`
+//            ^^^^^^ source.res
+//                  ^ string.quoted.other punctuation.definition.string.begin
+//                   ^^^^^^ string.quoted.other
+//                         ^^ punctuation.section.interpolation.begin
+//                           ^^ source.res
+//                             ^ punctuation.section.interpolation.end
+//                              ^^^^^ string.quoted.other
+//                                    ^ punctuation.section.interpolation.end
+//                                     ^^ string.quoted.other
+//                                       ^ string.quoted.other punctuation.definition.string.end
 
 // === numbers
 
