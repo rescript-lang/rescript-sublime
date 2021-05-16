@@ -175,9 +175,15 @@ switch person {
 | rest => "..."
 }
 
-let polymorphicVariant = #hey
-//                       ^ punctuation.definition.keyword
-//                        ^^^ variable.function variable.other
+let polyVar = #hey
+//            ^ punctuation.definition.keyword
+//             ^^^ variable.function variable.other
+let polyVar = #"hey"
+//            ^ punctuation.definition.keyword
+//             ^ string.quoted.double punctuation.definition.string.begin
+let polyVar = #123
+//            ^ punctuation.definition.keyword
+//             ^^^ constant.numeric
 let #...restPattern = myPolyVariant
 //  ^^^^ punctuation.definition.keyword
 //      ^^^^^^^^^^^ variable.function variable.other

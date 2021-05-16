@@ -154,6 +154,9 @@ contexts:
         2: punctuation.definition.keyword
         # see comment above
         3: variable.function variable.other
+    - match: '(#)'
+      captures:
+        1: punctuation.definition.keyword
 
   bracketAccess:
     - match: '\['
